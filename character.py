@@ -28,32 +28,44 @@ def rollattribute():
     del roll0a[0]
     roll0 = sum(roll0a)
     return roll0
-#if race == "Dwarf":
-#    rbcon=2
-#elif race == "Elf":
-#    rbdex=2
-#elif race == "Halfling":
-#    rbdex=2
-#elif race == "Human":
-#    rbstr=1
-#    rbdex=1
-#    rbcon=1
-#    rbint=1
-#    rbwis=1
-#    rbcha=1
-#elif race == "Dragonborn":
-#    rbstr=2
-#    rbcha=1
-#elif race == "Gnome":
-#    rbint=2
-#elif race == "Half-Orc":
-#    rbstr=2
-#    rbcon=1
-#elif race == "Tiefling":
-#    rbcha=2
-#    rbint=1
 
+rbstr=0
+rbdex=0
+rbcon=0
+rbint=0
+rbwis=0
+rbcha=0
 
+if race == "Dwarf":
+    rbcon=2
+elif race == "Elf":
+    rbdex=2
+elif race == "Halfling":
+    rbdex=2
+elif race == "Human":
+    rbstr=1
+    rbdex=1
+    rbcon=1
+    rbint=1
+    rbwis=1
+    rbcha=1
+elif race == "Dragonborn":
+    rbstr=2
+    rbcha=1
+elif race == "Gnome":
+    rbint=2
+elif race == "Half-Orc":
+    rbstr=2
+    rbcon=1
+elif race == "Tiefling":
+    rbcha=2
+    rbint=1
+statbonuses = {"STR" : rbstr,
+                "DEX" : rbdex,
+                "CON" : rbcon,
+                "INT" : rbint,
+                "WIS" : rbwis,
+                "CHA" : rbcha}
 stats = dict()
 stats["STR"] = rollattribute()
 stats["DEX"] = rollattribute()
@@ -61,6 +73,9 @@ stats["CON"] = rollattribute()
 stats["INT"] = rollattribute()
 stats["WIS"] = rollattribute()
 stats["CHA"] = rollattribute()
+
+for stat in stats:
+    stats[stat] = stats[stat]+statbonuses[stat]
 
 high = { "STR" : "strong",
          "DEX" : "agile",
