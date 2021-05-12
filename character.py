@@ -103,7 +103,7 @@ cantripsutil = ["Fire Light", "Ice Path", "Lightning Field", "Earth Mold", "Wind
 weaponsfighter = ["Greatsword", "Greataxe"]
 weaponsranger = ["Longbow", "Crossbow"]
 weaponsbarbarian = ["Warhammer", "Battleaxe"]
-instrumentsbard = ["Violin", "Viola", "Cello", "Lute", "Madolin"]
+instrumentsbard = ["Violin", "Viola", "Cello", "Lute", "Mandola"]
 
 #if stats["STR"] > 16 and stats["DEX"] < 10:
 #    print("TREE")
@@ -170,5 +170,5 @@ elif pcclass == "Barbarian":
 elif pcclass == "Wizard" or pcclass == "Cleric":
     print("Staff, Dagger")
 elif pcclass == "Bard":
-    print(instrumentsbard+", Dagger")
+    print(instrumentsbard[random.randint(0,len(instrumentsbard)-1)]+", Dagger")
 print("--------------------------------")
