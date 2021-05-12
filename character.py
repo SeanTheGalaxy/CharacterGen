@@ -1,4 +1,20 @@
 import random
+import config
+
+high = config.high
+low = config.low
+profession = config.profession
+quirk1 = config.quirk1
+quirk2 = config.quirk2
+cantripsoffense = config.cantripsoffense
+cantripsdefense = config.cantripsdefense
+cantripsutil = config.cantripsutil
+weaponsfighter = config.weaponsfighter
+weaponsranger = config.weaponsranger
+weaponsbarbarian = config.weaponsbarbarian
+instrumentsbard = config.instrumentsbard
+racial_modifiers = config.racial_modifiers
+races = config.races
 
 name = input("What Shall We Name Your Character? ")
 name = name.lower().capitalize()
@@ -15,8 +31,7 @@ else:
     himherthem = name
 print("And all shall worship", himherthem + ".", "For", pronoun, "is a...")
 
-racelist = ["Dragonborn", "Elf", "Dwarf", "Human", "Halfling", "Half-Orc", "Gnome", "Tiefling"]
-race = racelist[random.randint(0,len(racelist)-1)]
+race = races[random.randint(0,len(racelist)-1)]
 print(race)
 
 #def rollstat():
@@ -29,43 +44,8 @@ def rollattribute():
     roll0 = sum(roll0a)
     return roll0
 
-rbstr=0
-rbdex=0
-rbcon=0
-rbint=0
-rbwis=0
-rbcha=0
 
-if race == "Dwarf":
-    rbcon=2
-elif race == "Elf":
-    rbdex=2
-elif race == "Halfling":
-    rbdex=2
-elif race == "Human":
-    rbstr=1
-    rbdex=1
-    rbcon=1
-    rbint=1
-    rbwis=1
-    rbcha=1
-elif race == "Dragonborn":
-    rbstr=2
-    rbcha=1
-elif race == "Gnome":
-    rbint=2
-elif race == "Half-Orc":
-    rbstr=2
-    rbcon=1
-elif race == "Tiefling":
-    rbcha=2
-    rbint=1
-statbonuses = {"STR" : rbstr,
-                "DEX" : rbdex,
-                "CON" : rbcon,
-                "INT" : rbint,
-                "WIS" : rbwis,
-                "CHA" : rbcha}
+# roll stats
 stats = dict()
 stats["STR"] = rollattribute()
 stats["DEX"] = rollattribute()
@@ -74,57 +54,18 @@ stats["INT"] = rollattribute()
 stats["WIS"] = rollattribute()
 stats["CHA"] = rollattribute()
 
+# apply racial modifiers
 for stat in stats:
-    stats[stat] = stats[stat]+statbonuses[stat]
-
-high = { "STR" : "strong",
-         "DEX" : "agile",
-         "CON" : "tough",
-         "INT" : "smart",
-         "WIS" : "wise",
-         "CHA" : "persuasive" }
-low = { "STR" : "weak",
-         "DEX" : "slooow",
-         "CON" : "fragile",
-         "INT" : "dumb",
-         "WIS" : "foolish",
-         "CHA" : "homely" }
-profession = { "STR" : "Fighter",
-         "DEX" : "Ranger",
-         "CON" : "Barbarian",
-         "INT" : "Wizard",
-         "WIS" : "Cleric",
-         "CHA" : "Bard" }
-quirk1 = ["is scared of", "loves", "hates", "is allergic to", "has an addiction to", "is a collecter of", "is unfortunately fond of"]
-quirk2 = ["pizza", "love", "onions", "the cold", "turkeys", "caves", "baths", "clerics", "fruit bats", "swords", "wood", "paper", "bows", "hostages", "medals", "awards", "rubies", "gods", "phones", "ipads", "ale", "fine wine", "boats", "treehouses"]
-cantripsoffense = ["Fireball", "Ice Shard", "Lightning Bolt", "Earth Chunk", "Wind Blade"]
-cantripsdefense = ["Fire Wall", "Ice Shield", "Lightning Deflect", "Earth Armor", "Wind Gust"]
-cantripsutil = ["Fire Light", "Ice Path", "Lightning Field", "Earth Mold", "Wind Push"]
-weaponsfighter = ["Greatsword", "Greataxe"]
-weaponsranger = ["Longbow", "Crossbow"]
-weaponsbarbarian = ["Warhammer", "Battleaxe"]
-instrumentsbard = ["Violin", "Viola", "Cello", "Lute", "Mandola"]
-
-#if stats["STR"] > 16 and stats["DEX"] < 10:
-#    print("TREE")
-#elif stats["STR"] < 10 and stats["DEX"] > 16:
-#    print("WORM")
-#elif stats["STR"] < 6 and stats["DEX"] < 6:
-#    print("RADISH")
-#elif stats["STR"] < 10 and stats["DEX"] < 10:
-#    print("WIMP")
-#elif stats["STR"] < 15 or stats["DEX"] < 15:
-#    print("HUMAN")
-#else:
-#    print("DEITY")
+    if stat in racial_modifiers[race] :
+        stats[stat] = stats[stat]+racial_modifiers[race][stat]
 
 adjectives = []
 suggestions = []
 for stat in stats :
     #print(stat+ ":", stats[stat])
-    if stats[stat] < 6:
+    if stats[stat] < 9:
         adjectives.append(low[stat])
-    elif stats[stat] > 15:
+    elif stats[stat] > 13:
         adjectives.append(high[stat])
         suggestions.append(profession[stat])
 
