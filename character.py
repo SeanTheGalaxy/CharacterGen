@@ -30,8 +30,12 @@ def load_characters():
         with open('characters.json') as json_file:
             data = json.load(json_file)
             return data
-    else :
+    else:
         return {"characters":[]}
+
+def list_characters():
+
+    return [c["name"] for c in load_characters()["characters"]]
 
 # Saves a single character (dictionary)
 def save_character(character):
@@ -114,89 +118,113 @@ def generate_character(name, pronoun, race, pcclass, stats):
 
 
 
-name = input("What Shall We Name Your Character? ")
-name= name.lower().capitalize()
-pronoun = input("What is their pronoun? ")
-print("Ok", pronoun, "Shall Be Called", name)
-pronoun = pronoun.lower()
-himherthem = pronoun
-if pronoun == "she":
-    himherthem = "her"
-elif pronoun == "they":
-    himherthem = "them"
-elif pronoun == "he":
-    himherthem = "him"
-else:
-    himherthem = name
-print("And all shall worship", himherthem + ".", "For", pronoun, "is a...")
+def console_create_character():
+    name = input("What Shall We Name Your Character? ")
+    name= name.lower().capitalize()
+    pronoun = input("What is their pronoun? ")
+    print("Ok", pronoun, "Shall Be Called", name)
+    pronoun = pronoun.lower()
+    himherthem = pronoun
+    if pronoun == "she":
+        himherthem = "her"
+    elif pronoun == "they":
+        himherthem = "them"
+    elif pronoun == "he":
+        himherthem = "him"
+    else:
+        himherthem = name
+    print("And all shall worship", himherthem + ".", "For", pronoun, "is a...")
 
-race = random.choice(races)
-print(race)
+    race = random.choice(races)
+    print(race)
 
-#def rollstat():
-    #return random.randint(3, 20)
+    stats = generate_stats(race)
+    adjectives = []
+    suggestions = []
+    for stat in stats :
+        #print(stat+ ":", pc["stats"][stat])
+        if stats[stat] < 9:
+            adjectives.append(low[stat])
+        elif stats[stat] > 13:
+            adjectives.append(high[stat])
+            suggestions.append(profession[stat])
 
+    def smartjoin(list, conjunction, nothing):
+        if len(list) > 1:
+            return ", ".join(list[:-1]) + " " + conjunction + " " + list[-1]
+        elif len(list) > 0:
+            return list[0]
+        else: return nothing
 
-
-stats = generate_stats(race)
-adjectives = []
-suggestions = []
-for stat in stats :
-    #print(stat+ ":", pc["stats"][stat])
-    if stats[stat] < 9:
-        adjectives.append(low[stat])
-    elif stats[stat] > 13:
-        adjectives.append(high[stat])
-        suggestions.append(profession[stat])
-
-def smartjoin(list, conjunction, nothing):
-    if len(list) > 1:
-        return ", ".join(list[:-1]) + " " + conjunction + " " + list[-1]
-    elif len(list) > 0:
-        return list[0]
-    else: return nothing
-
-print(pronoun, "is", smartjoin(adjectives, "and", "boring"))
-#print(pronoun, quirk1[random.randint(0,len(quirk1)-1)], quirk2[random.randint(0,len(quirk2)-1)])
-print("and",pronoun,"would make a good", smartjoin(suggestions, "or", "hostage"))
-pcclass = input("What do you want to be? ")
-pcclass = pcclass.lower().capitalize()
+    print(pronoun, "is", smartjoin(adjectives, "and", "boring"))
+    #print(pronoun, quirk1[random.randint(0,len(quirk1)-1)], quirk2[random.randint(0,len(quirk2)-1)])
+    print("and",pronoun,"would make a good", smartjoin(suggestions, "or", "hostage"))
+    pcclass = input("What do you want to be? ")
+    pcclass = pcclass.lower().capitalize()
 
 
-pc = generate_character(name=name, race=race, pcclass=pcclass, pronoun=pronoun, stats=stats)
+    pc = generate_character(name=name, race=race, pcclass=pcclass, pronoun=pronoun, stats=stats)
+    console_print_character(pc)
+
+    if input("Do you want to save " + name + "? (Y/N) ").lower() == "y":
+        save_character(pc)
+        print("Saved", name+"!")
+    else:
+        print(name, "is gone forever. Wah Wah Waaaaaaaah. :(")
 
 
-print("\n\n")
-print("--------------------------------")
-print("Name:", pc["name"])
-print("Class:", pc["pcclass"])
-print("Race:", pc["race"])
 
-print("")
-for stat in pc["stats"] :
-    print(stat+ ":", pc["stats"][stat])
+def console_print_character(pc):
+    print("\n\n")
+    print("--------------------------------")
+    print("Name:", pc["name"])
+    print("Class:", pc["pcclass"])
+    print("Race:", pc["race"])
 
-print("")
-print("Quirks:")
-for q in pc["quirks"] : print("   " + q)
-
-if len(pc["spells"]) > 0 :
     print("")
-    print("Spells:")
-    for s in pc["spells"]: print("   " + s)
+    for stat in pc["stats"] :
+        print(stat+ ":", pc["stats"][stat])
 
-if len(pc["weapons"]) > 0 :
     print("")
-    print("Weapons:")
-    for w in pc["weapons"]: print("   " + w)
+    print("Quirks:")
+    for q in pc["quirks"] : print("   " + q)
 
-if len(pc["gear"]) > 0 :
+    if len(pc["spells"]) > 0 :
+        print("")
+        print("Spells:")
+        for s in pc["spells"]: print("   " + s)
+
+    if len(pc["weapons"]) > 0 :
+        print("")
+        print("Weapons:")
+        for w in pc["weapons"]: print("   " + w)
+
+    if len(pc["gear"]) > 0 :
+        print("")
+        print("Gear:")
+        for g in pc["gear"]: print("   " + g)
+    print("--------------------------------")
+
+def console_print_menu():
     print("")
-    print("Gear:")
-    for g in pc["gear"]: print("   " + g)
-print("--------------------------------")
-if input("Do you want to save " + name + "? (Y/N) ").lower() == "y":
-    save_character(pc)
-    print("Saved", name+"!")
-else:
-    print(name, "is gone forever. Wah Wah Waaaaaaaah. :(")
+    print("--------------------------------")
+    print("MAIN MENU")
+    print("  [C]reate Character")
+    print("  [V]iew Character")
+    print("  [E]dit Character")
+    print("  [D]elete Character")
+    print("  [L]ist Characters")
+    print("  [Q]uit")
+    print("--------------------------------")
+# main loop
+while True:
+    console_print_menu()
+    command = input("> ").lower()
+    if command == "c":
+        console_create_character()
+    elif command == "q":
+        break
+    elif command == "l":
+        for c in list_characters() : print(c)
+    else:
+        print("Not implemented yet")
