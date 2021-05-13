@@ -1,22 +1,7 @@
 import json
 import random
-import config
+from config import *
 import os
-
-high = config.high
-low = config.low
-profession = config.profession
-quirk1 = config.quirk1
-quirk2 = config.quirk2
-cantripsoffense = config.cantripsoffense
-cantripsdefense = config.cantripsdefense
-cantripsutil = config.cantripsutil
-weaponsfighter = config.weaponsfighter
-weaponsranger = config.weaponsranger
-weaponsbarbarian = config.weaponsbarbarian
-instrumentsbard = config.instrumentsbard
-racial_modifiers = config.racial_modifiers
-races = config.races
 
 
 # Takes a dictionary with a list of characters and saves to storage
