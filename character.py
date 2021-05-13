@@ -33,8 +33,21 @@ def load_characters():
     else:
         return {"characters":[]}
 
-def list_characters():
+def load_character(name):
+    for c in load_characters()["characters"]:
+        if c["name"].lower() == name.lower():
+            return c
+    return None
 
+def delete_character(name):
+    data = load_characters()
+    for c in data["characters"]:
+        if c["name"].lower() == name.lower():
+            data["characters"].remove(c)
+            write_characters(data)
+            return
+
+def list_characters():
     return [c["name"] for c in load_characters()["characters"]]
 
 # Saves a single character (dictionary)
@@ -226,5 +239,16 @@ while True:
         break
     elif command == "l":
         for c in list_characters() : print(c)
+    elif command == "v":
+        name = input("Which character? ")
+        pc = load_character(name)
+        if pc:
+            console_print_character(pc)
+        else:
+            print("Character not found.")
+    elif command == "d":
+        name = input("Which character? ")
+        delete_character(name)
+        print(name, "is gone forever. Wah Wah Waaaaaaaah. :(")
     else:
         print("Not implemented yet")
