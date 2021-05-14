@@ -7,7 +7,7 @@ import os
 # Takes a dictionary with a list of characters and saves to storage
 def write_characters(data):
     with open('characters.json', 'w') as outfile:
-        json.dump(data, outfile)
+        json.dump(data, outfile, indent=4)
 
 # Loads characters from storage and returns a dictionary with a list of characters
 def load_characters():
@@ -114,11 +114,21 @@ def generate_character(name, pronoun, race, pcclass, stats):
         pc["gear"].append(random.choice(instrumentsbard))
     return pc
 
-
+def capitalize_name(name):
+    parts = name.lower().split(' ')
+    for i in range(len(parts)):
+        if parts[i] not in {'the', 'of'}:
+            parts[i] = parts[i].capitalize()
+    return " ".join(parts)
 
 def console_create_character():
-    name = input("What Shall We Name Your Character? ")
-    name= name.lower().capitalize()
+    while True:
+        name = input("What Shall We Name Your Character? ")
+        #name= name.lower().capitalize()
+        name = capitalize_name(name)
+        if load_character(name):
+            print("That name is taken. What name would you like to use? ")
+        else: break
     pronoun = input("What is their pronoun? ")
     print("Ok", pronoun, "Shall Be Called", name)
     pronoun = pronoun.lower()
@@ -165,6 +175,10 @@ def console_create_character():
     console_print_character(pc)
 
     if input("Do you want to save " + name + "? (Y/N) ").lower() == "y":
+        #pc = load_character(name)
+        #if pc:
+        #    print(name)
+        #else:
         save_character(pc)
         print("Saved", name+"!")
     else:
@@ -212,6 +226,7 @@ def console_print_menu():
     print("  [E]dit Character")
     print("  [D]elete Character")
     print("  [L]ist Characters")
+    print("  [S]ettings")
     print("  [Q]uit")
     print("--------------------------------")
 # main loop
@@ -223,12 +238,42 @@ while True:
     elif command == "q":
         break
     elif command == "l":
-        for c in list_characters() : print(c)
+        list = list_characters()
+        list.sort(key=lambda c: c.upper())
+        for c in list : print(c)
     elif command == "v":
         name = input("Which character? ")
         pc = load_character(name)
         if pc:
             console_print_character(pc)
+        else:
+            print("Character not found.")
+    elif command == "e":
+        oldname = input("Which character? ")
+        pc = load_character(oldname)
+        if pc:
+            while True:
+                console_print_character(pc)
+                print("--------------------------------")
+                print(f"EDITING {pc['name'].upper()}")
+                print("[N]ame")
+                print("[D]one")
+                print("--------------------------------")
+                print("")
+                edit_command = input("> ").lower()
+                if edit_command == "d":
+                    break
+                elif edit_command == "n":
+                    while True:
+                        name = input("What Shall We Rename Your Character? ")
+                        name= capitalize_name(name) #name.lower().capitalize()
+                        if load_character(name):
+                            print("That name is taken. What name would you like to use? ")
+                        else: break
+                    pc['name'] = name
+                    save_character(pc)
+                    print("Saved", name+"!")
+                    delete_character(oldname)
         else:
             print("Character not found.")
     elif command == "d":
